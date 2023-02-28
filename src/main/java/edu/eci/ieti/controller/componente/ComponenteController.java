@@ -25,14 +25,16 @@ public class ComponenteController {
     }
 
     @PostMapping
-    public ResponseEntity<Componente> createUser(@RequestBody Componente componente) {
+    public ResponseEntity<Componente> createComponent(@RequestBody Componente componente) {
         URI createdUserUri = URI.create("");
-        componenteService.save(new CPU(componente.getId()));
+        Componente cpu = new CPU(componente.getNombre());
+        cpu.setPrecio(componente.getPrecio());
+        componenteService.save(cpu);
         return ResponseEntity.created(createdUserUri).body(null);
     }
 
     @GetMapping(value = "/getAllComponents")
-    public ResponseEntity<List<Componente>> getAllUsers() {
+    public ResponseEntity<List<Componente>> getAllComponent() {
         List<Componente> componentes= componenteService.all();
         return ResponseEntity.ok(componentes);
     }
@@ -46,7 +48,7 @@ public class ComponenteController {
     }
 
     @PutMapping(value = "{id}")
-    public ResponseEntity<User> updateUser(@PathVariable("id") String id, @RequestBody Componente componente) {
+    public ResponseEntity<User> updateComponent(@PathVariable("id") String id, @RequestBody Componente componente) {
         Componente componente1 = new CPU(componente.getId());
         Optional<Componente> componentes = componenteService.findById(id);
         if (componentes.isPresent()){
@@ -59,7 +61,7 @@ public class ComponenteController {
     }
 
     @DeleteMapping("{id}")
-    public ResponseEntity<Void> deleteUser(@PathVariable("id") String id) {
+    public ResponseEntity<Void> deleteComponent(@PathVariable("id") String id) {
         if(componenteService.findById(id).isEmpty()) throw new UserNotFoundException(id);
         componenteService.deleteById(id);
         return ResponseEntity.ok().build();

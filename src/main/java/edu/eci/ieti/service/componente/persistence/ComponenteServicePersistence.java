@@ -47,7 +47,8 @@ public class ComponenteServicePersistence {
         MongoCursor<Document> cursor = iterable.iterator();
         Document data_collection = new Document("_id", new ObjectId());
         ArrayList<Componente> data = getData();
-        data_collection.append("Componente"+data.size(), component.getId());
+        data_collection.append(component.getNombre(), component.getId());
+        data_collection.append(String.valueOf(component.getPrecio()), component.getId());
         componentes.insertOne(data_collection);
     }
 
