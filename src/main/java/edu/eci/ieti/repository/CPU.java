@@ -11,4 +11,24 @@ public class CPU extends Componente{
     public CPU(String nombre) {
         super(nombre);
     }
+
+    public double getRendimiento_boost_clock() {
+        return rendimiento_boost_clock;
+    }
+
+    public int getNucleos() {
+        return nucleos;
+    }
+
+    public double getRendimiento_core_clock() {
+        return rendimiento_core_clock;
+    }
+
+    public String getSMT() {
+        return SMT;
+    }
+
+    public String getTDP() {
+        return TDP;
+    }
 }
