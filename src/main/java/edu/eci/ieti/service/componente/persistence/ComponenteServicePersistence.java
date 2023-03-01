@@ -2,12 +2,10 @@ package edu.eci.ieti.service.componente.persistence;
 
 import com.mongodb.*;
 import com.mongodb.client.*;
-import edu.eci.ieti.repository.Tarjeta_de_video;
-import org.apache.commons.logging.Log;
+import edu.eci.ieti.repository.*;
 import org.bson.Document;
 import org.bson.types.ObjectId;
 
-import edu.eci.ieti.repository.Componente;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.stereotype.Component;
@@ -56,25 +54,38 @@ public class ComponenteServicePersistence {
         ArrayList<Componente> data = new ArrayList<>();
         MongoCollection<Document> customers = database.getCollection("collection-proyecto-ieti");
         FindIterable<Document> iterable = customers.find();
-        MongoCursor<Document> cursor = iterable.iterator();
         for (Document d : iterable) {
-            Componente componente = null;
             try {
+                Componente componente = null;
                 JSONObject jsonObject = new JSONObject(d.toJson());
                 String name = jsonObject.get("name").toString();
-                double boots = Double.parseDouble(jsonObject.get("boost_lock").toString());
-                double core = Double.parseDouble(jsonObject.get("core_lock").toString());
-                int largo = Integer.parseInt(jsonObject.get("largo").toString());
-                int memoria = Integer.parseInt(jsonObject.get("memoria").toString());
-                String precio = jsonObject.get("precio").toString();
-                String procesador = jsonObject.get("procesador").toString();
-                String valoracion = jsonObject.get("valoracion").toString();
-                componente = new Tarjeta_de_video(name,procesador,memoria,core,boots,largo);
-                data.add(componente);
+                System.out.println(jsonObject);
+                String className = jsonObject.get("class_name").toString();
+                System.out.println("sdas");
+                System.out.println(jsonObject);
+                System.out.println(className);
+                System.out.println(name);
+                if (className.equals("Tarjeta_de_video")) {
+                    componente = new Tarjeta_de_video(name).createComponente(jsonObject);
+                } else if (className.equals("CPU")) {
+                    componente = new CPU(name).createComponente(jsonObject);
+                } else if (className.equals("RAM")) {
+                    componente = new RAM(name).createComponente(jsonObject);
+                } else if (className.equals("Board")){
+                    componente = new Board(name).createComponente(jsonObject);
+                } else if (className.equals("Carcasa")){
+                    componente = new Carcasa(name).createComponente(jsonObject);
+                } else if (className.equals("Disco_Duro")){
+                    componente = new Disco_Duro(name).createComponente(jsonObject);
+                } else if (className.equals("Fuente_de_poder")){
+                    componente = new Fuente_de_poder(name).createComponente(jsonObject);
+                }
+                if (componente != null) {
+                    data.add(componente);
+                }
             }catch (JSONException err){
             }
         }
-        System.out.println(data.size());
         return data;
     }
 
@@ -83,8 +94,7 @@ public class ComponenteServicePersistence {
     }
 
     public List<Componente> all(){
-        getData();
-        return new ArrayList<>(componentes.values());
+        return getData();
     }
 
     public void deleteById(String id) {

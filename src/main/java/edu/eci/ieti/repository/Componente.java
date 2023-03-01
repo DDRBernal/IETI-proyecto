@@ -1,5 +1,7 @@
 package edu.eci.ieti.repository;
 
+import org.json.JSONObject;
+
 public abstract class Componente {
 
     private String id;
@@ -12,6 +14,8 @@ public abstract class Componente {
     public Componente(String nombre){
         this.nombre=nombre;
     }
+
+    public abstract Componente createComponente(JSONObject jsonObject);
 
     public String getId() {
         return id;
