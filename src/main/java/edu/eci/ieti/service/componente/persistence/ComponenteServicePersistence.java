@@ -59,30 +59,17 @@ public class ComponenteServicePersistence {
                 Componente componente = null;
                 JSONObject jsonObject = new JSONObject(d.toJson());
                 String name = jsonObject.get("name").toString();
-                System.out.println(jsonObject);
                 String className = jsonObject.get("class_name").toString();
-                System.out.println("sdas");
-                System.out.println(jsonObject);
-                System.out.println(className);
-                System.out.println(name);
-                if (className.equals("Tarjeta_de_video")) {
-                    componente = new Tarjeta_de_video(name).createComponente(jsonObject);
-                } else if (className.equals("CPU")) {
-                    componente = new CPU(name).createComponente(jsonObject);
-                } else if (className.equals("RAM")) {
-                    componente = new RAM(name).createComponente(jsonObject);
-                } else if (className.equals("Board")){
-                    componente = new Board(name).createComponente(jsonObject);
-                } else if (className.equals("Carcasa")){
-                    componente = new Carcasa(name).createComponente(jsonObject);
-                } else if (className.equals("Disco_Duro")){
-                    componente = new Disco_Duro(name).createComponente(jsonObject);
-                } else if (className.equals("Fuente_de_poder")){
-                    componente = new Fuente_de_poder(name).createComponente(jsonObject);
+                switch (className) {
+                    case "Tarjeta_de_video" -> componente = new Tarjeta_de_video(name).createComponente(jsonObject);
+                    case "CPU" -> componente = new CPU(name).createComponente(jsonObject);
+                    case "RAM" -> componente = new RAM(name).createComponente(jsonObject);
+                    case "Board" -> componente = new Board(name).createComponente(jsonObject);
+                    case "Carcasa" -> componente = new Carcasa(name).createComponente(jsonObject);
+                    case "Disco_Duro" -> componente = new Disco_Duro(name).createComponente(jsonObject);
+                    case "Fuente_de_poder" -> componente = new Fuente_de_poder(name).createComponente(jsonObject);
                 }
-                if (componente != null) {
-                    data.add(componente);
-                }
+                if (componente != null) data.add(componente);
             }catch (JSONException err){
             }
         }

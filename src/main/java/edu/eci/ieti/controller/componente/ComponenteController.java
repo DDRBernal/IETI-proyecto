@@ -1,12 +1,13 @@
 package edu.eci.ieti.controller.componente;
 
 import edu.eci.ieti.exception.UserNotFoundException;
-import edu.eci.ieti.repository.CPU;
-import edu.eci.ieti.repository.Componente;
+import edu.eci.ieti.repository.*;
 import edu.eci.ieti.repository.user.User;
 import edu.eci.ieti.repository.user.UserDto;
 import edu.eci.ieti.service.componente.ComponenteService;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -25,12 +26,23 @@ public class ComponenteController {
     }
 
     @PostMapping
-    public ResponseEntity<Componente> createComponent(@RequestBody Componente componente) {
+    public ResponseEntity<Componente> createComponent(@RequestBody ComponentRequest<?> request) {
         URI createdUserUri = URI.create("");
-        Componente cpu = new CPU(componente.getNombre());
-        cpu.setPrecio(componente.getPrecio());
-        componenteService.save(cpu);
-        return ResponseEntity.created(createdUserUri).body(null);
+        try {
+            // Obtener la clase del objeto contenido en la solicitud
+            Class<?> clazz = request.getComponent().getClass();
+            // Verificar que la clase sea una subclase de Componente
+            if (!Componente.class.isAssignableFrom(clazz)) {
+                throw new IllegalArgumentException("Class not a subclass of Componente");
+            }
+            // Instanciar el objeto correcto según el tipo de clase que se envía en la solicitud
+            Componente componente = (Componente) clazz.newInstance();
+            BeanUtils.copyProperties(request.getComponent(), componente);
+            componenteService.save(componente);
+            return ResponseEntity.created(createdUserUri).body(componente);
+        } catch (Exception e) {
+            return ResponseEntity.created(createdUserUri).body(null);
+        }
     }
 
     @GetMapping(value = "/getAllComponents")
@@ -42,7 +54,6 @@ public class ComponenteController {
     @GetMapping("{id}")
     public ResponseEntity<Componente> findById(@PathVariable("id") String id) {
         Optional<Componente> op = componenteService.findById(id);
-
         if (op.isEmpty()) throw new UserNotFoundException(id);
         return ResponseEntity.ok(op.get());
     }

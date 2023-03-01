@@ -37,5 +37,19 @@ public class Board extends Componente{
         return board;
     }
 
+    public void setEspacio_de_memoria(int espacio_de_memoria) {
+        this.espacio_de_memoria = espacio_de_memoria;
+    }
 
+    public void setEspecificaciones(String especificaciones) {
+        this.especificaciones = especificaciones;
+    }
+
+    public void setMemoria_maxima(int memoria_maxima) {
+        this.memoria_maxima = memoria_maxima;
+    }
+
+    public void setSocket_CPU(String socket_CPU) {
+        this.socket_CPU = socket_CPU;
+    }
 }
