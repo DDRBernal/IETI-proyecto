@@ -4,15 +4,14 @@ import com.mongodb.*;
 import com.mongodb.client.*;
 import edu.eci.ieti.repository.*;
 import org.bson.Document;
-import org.bson.types.ObjectId;
 
+import org.bson.types.ObjectId;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 
 @Component
 public class ComponenteServicePersistence {
@@ -38,16 +37,29 @@ public class ComponenteServicePersistence {
         database = mongoClient.getDatabase("proyecto-ieti");
     }
 
-    public void save(Componente component) {
+    public Componente save(LinkedHashMap<String, String> component) {
+//{nombre=MSI Radeon RX 560 4GT LP OC, precio=15.56, valoracion=4,
+// procesador=Radeon RX 560 - 1024, memoria=4,
+// core_clock=1275.0, boost_clock=1196.0, class_name=Tarjeta_de_video}
         MongoDatabase database = mongoClient.getDatabase("proyecto-ieti");
         MongoCollection<Document> componentes = database.getCollection("collection-proyecto-ieti");
-        FindIterable<Document> iterable = componentes.find();
-        MongoCursor<Document> cursor = iterable.iterator();
         Document data_collection = new Document("_id", new ObjectId());
-        ArrayList<Componente> data = getData();
-        data_collection.append(component.getNombre(), component.getId());
-        data_collection.append(String.valueOf(component.getPrecio()), component.getId());
-        componentes.insertOne(data_collection);
+        Componente componente = null;
+        System.out.println(component);
+        switch (component.get("class_name")) {
+            case "Tarjeta_de_video" ->
+            componente = new Tarjeta_de_video(component.get("nombre")).insertComponente(component, componentes, data_collection);
+            case "Board" -> componente = new Board(component.get("nombre")).insertComponente(component,componentes,data_collection);
+        }
+        System.out.println("ssadd");
+        System.out.println(data_collection);
+
+
+        Document doc = new Document();
+        BeanUtils.copyProperties(doc, component);
+        System.out.println(componente);
+        componentes.insertOne(doc);
+        return componente;
     }
 
     public static ArrayList<Componente> getData(){

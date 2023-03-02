@@ -1,5 +1,7 @@
 package edu.eci.ieti.repository;
 
+import com.mongodb.client.MongoCollection;
+import org.bson.Document;
 import org.json.JSONObject;
 
 public class CPU extends Componente{
@@ -59,4 +61,5 @@ public class CPU extends Componente{
     public String getTDP() {
         return TDP;
     }
+
 }

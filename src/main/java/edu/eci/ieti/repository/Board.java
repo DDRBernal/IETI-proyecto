@@ -1,6 +1,10 @@
 package edu.eci.ieti.repository;
 
+import com.mongodb.client.MongoCollection;
+import org.bson.Document;
 import org.json.JSONObject;
+
+import java.util.LinkedHashMap;
 
 public class Board extends Componente{
 
@@ -51,5 +55,17 @@ public class Board extends Componente{
 
     public void setSocket_CPU(String socket_CPU) {
         this.socket_CPU = socket_CPU;
+    }
+
+    public Componente insertComponente(LinkedHashMap<String, String> component, MongoCollection<Document> componentes, Document data_collection) {
+        JSONObject jsonComponent = new JSONObject(component);
+        Board board = new Board(component.get("nombre"));
+        board.setPrecio(Double.parseDouble(jsonComponent.get("precio").toString()));
+        board.setValoracion(Integer.parseInt(jsonComponent.get("valoracion").toString()));
+        board.setEspacio_de_memoria(Integer.parseInt(component.get("espacio_de_memoria")));
+        board.setEspecificaciones(jsonComponent.get("especificaciones").toString());
+        board.setMemoria_maxima(Integer.parseInt(jsonComponent.get("memoria_maxima").toString()));
+        board.setSocket_CPU(jsonComponent.get("socket_cpu").toString());
+        return board;
     }
 }

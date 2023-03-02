@@ -1,5 +1,7 @@
 package edu.eci.ieti.repository;
 
+import com.mongodb.client.MongoCollection;
+import org.bson.Document;
 import org.json.JSONObject;
 
 public class RAM extends Componente{
@@ -37,5 +39,6 @@ public class RAM extends Componente{
         ram.setPrecio(Double.parseDouble(precio)); ram.setValoracion(Integer.parseInt(valoracion));
         return ram;
     }
+
 
 }

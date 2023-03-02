@@ -12,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Optional;
 
@@ -29,17 +30,11 @@ public class ComponenteController {
     public ResponseEntity<Componente> createComponent(@RequestBody ComponentRequest<?> request) {
         URI createdUserUri = URI.create("");
         try {
-            // Obtener la clase del objeto contenido en la solicitud
-            Class<?> clazz = request.getComponent().getClass();
-            // Verificar que la clase sea una subclase de Componente
-            if (!Componente.class.isAssignableFrom(clazz)) {
-                throw new IllegalArgumentException("Class not a subclass of Componente");
-            }
-            // Instanciar el objeto correcto según el tipo de clase que se envía en la solicitud
-            Componente componente = (Componente) clazz.newInstance();
-            BeanUtils.copyProperties(request.getComponent(), componente);
-            componenteService.save(componente);
-            return ResponseEntity.created(createdUserUri).body(componente);
+            //Obtener la clase del objeto contenido en la solicitud
+            LinkedHashMap<String, String> li_hash_map = (LinkedHashMap<String, String>) request.getComponent();
+            System.out.println(li_hash_map.get("class_name"));
+            componenteService.save(li_hash_map);
+            return ResponseEntity.created(createdUserUri).body(null);
         } catch (Exception e) {
             return ResponseEntity.created(createdUserUri).body(null);
         }
@@ -64,7 +59,7 @@ public class ComponenteController {
         Optional<Componente> componentes = componenteService.findById(id);
         if (componentes.isPresent()){
             componenteService.update(componente1,id);
-            componenteService.save(componentes.get());
+//            componenteService.save(componentes.get());
             return ResponseEntity.ok(null);
         }else{
             throw new UserNotFoundException(id);

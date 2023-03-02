@@ -5,6 +5,7 @@ import edu.eci.ieti.service.componente.persistence.ComponenteServicePersistence;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Optional;
 
@@ -15,9 +16,9 @@ public class ComponenteServiceMap implements ComponenteService {
     private ComponenteServicePersistence componenteServicePersistence = new ComponenteServicePersistence();
 
     @Override
-    public Componente save(Componente componente) {
-        componenteServicePersistence.save(componente);
-        return componente;
+    public Componente save(LinkedHashMap<String, String> componente) {
+        Componente componente1 = componenteServicePersistence.save(componente);
+        return componente1;
     }
 
     @Override
