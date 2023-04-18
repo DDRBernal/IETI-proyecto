@@ -1,0 +1,46 @@
+import React, { useState, useEffect } from 'react';
+import Axios from 'axios';
+import './App.css';
+import iframeCode from './resources';
+
+
+interface Component {
+  id: number;
+  nombre: string;
+}
+
+function App() {
+
+  const [data, setData] = useState([]);
+
+  useEffect(() => {
+    Axios.get('http://localhost:8080/v1/componente/getAllComponents') // make a request to get data
+      .then(response => setData(response.data))
+      .catch(error => console.log(error));
+  }, []);
+  
+  console.log(data);
+  
+  data.map(item=> (console.log(item)));
+
+
+  return (
+    /* <div className="App">
+      <header className="App-header">
+      <li>                          
+                    <div dangerouslySetInnerHTML={{__html: iframeCode}} />
+                 </li>
+      </header>
+    </div> */
+    <div>
+      <h1>Data from Spring Boot API:</h1>
+      <ul>
+        {data.map(item => (
+           <li key={item.id}>{item.nombre}</li>
+        ))}
+      </ul>
+    </div>
+  );
+}
+
+export default App;
